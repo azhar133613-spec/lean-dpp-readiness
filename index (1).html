@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lean × DPP — Readiness Framework for SME Garment Factories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EAE6DD;
+    --surface:#F7F4EE;
+    --ink:#21242B;
+    --ink-soft:#5C5F6A;
+    --denim:#2E4374;
+    --denim-soft:#5B6E9E;
+    --tape:#E7B23E;
+    --thread:#B3402F;
+    --line:#CFC9BC;
+    --r-display: 'Space Grotesk', sans-serif;
+    --r-body: 'Inter', sans-serif;
+    --r-mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--r-body);
+    color:var(--ink);
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(46,67,116,0.05) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(46,67,116,0.05) 40px),
+      var(--paper);
+    line-height:1.6;
+  }
+  a{color:var(--denim);}
+  img,svg{display:block;}
+
+  /* ===== Layout helpers ===== */
+  .wrap{max-width:1080px; margin:0 auto; padding:0 28px;}
+  section{position:relative; padding:90px 0;}
+  .section-tab{
+    position:absolute; left:0; top:90px;
+    font-family:var(--r-mono); font-size:12px; letter-spacing:0.12em;
+    color:var(--denim-soft); writing-mode:vertical-rl; text-orientation:mixed;
+    transform:rotate(180deg);
+    border-left:2px solid var(--line); padding-left:8px;
+  }
+  @media (max-width:900px){ .section-tab{display:none;} }
+
+  .eyebrow{
+    font-family:var(--r-mono); font-size:13px; letter-spacing:0.15em; text-transform:uppercase;
+    color:var(--denim); margin-bottom:14px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:""; width:18px; height:2px; background:var(--tape);}
+  h1,h2,h3{font-family:var(--r-display); font-weight:600; letter-spacing:-0.01em;}
+  h2{font-size:clamp(28px,4vw,42px); margin-bottom:18px; color:var(--ink);}
+  h3{font-size:20px; margin-bottom:8px;}
+  p{color:var(--ink-soft); max-width:680px;}
+  .lede{font-size:18px; max-width:720px;}
+
+  /* ===== Nav ===== */
+  nav{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter: blur(8px);
+    background:rgba(234,230,221,0.85);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:64px;}
+  .logo{font-family:var(--r-mono); font-weight:600; font-size:14px; letter-spacing:0.05em;}
+  .logo span{color:var(--thread);}
+  .navlinks{display:flex; gap:28px; font-family:var(--r-mono); font-size:13px;}
+  .navlinks a{color:var(--ink); text-decoration:none; opacity:0.7; transition:opacity .2s;}
+  .navlinks a:hover{opacity:1; color:var(--denim);}
+  @media (max-width:700px){.navlinks{display:none;}}
+
+  /* ===== Hero ===== */
+  .hero{padding:80px 0 60px;}
+  .hero .tagline{
+    font-family:var(--r-mono); font-size:13px; color:var(--ink-soft);
+    border:1px solid var(--line); display:inline-block; padding:6px 14px; border-radius:100px;
+    margin-bottom:28px; background:var(--surface);
+  }
+  .hero h1{
+    font-size:clamp(38px,7vw,68px); line-height:1.05; max-width:920px; margin-bottom:24px;
+  }
+  .hero h1 em{font-style:normal; color:var(--denim); border-bottom:4px solid var(--tape);}
+  .hero .meta-row{
+    display:flex; flex-wrap:wrap; gap:14px; margin-top:36px;
+  }
+  .meta-card{
+    font-family:var(--r-mono); font-size:12px; color:var(--ink-soft);
+    border:1px dashed var(--line); padding:10px 16px; background:var(--surface);
+  }
+  .meta-card b{display:block; font-family:var(--r-body); font-size:15px; color:var(--ink); font-weight:600; margin-top:2px;}
+  .cta-row{margin-top:36px; display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--r-mono); font-size:13px; letter-spacing:0.05em; text-decoration:none;
+    padding:13px 26px; border-radius:2px; display:inline-flex; align-items:center; gap:10px;
+    border:1px solid var(--ink); transition:all .2s;
+  }
+  .btn-primary{background:var(--denim); color:#fff; border-color:var(--denim);}
+  .btn-primary:hover{background:var(--ink);}
+  .btn-secondary{color:var(--ink);}
+  .btn-secondary:hover{background:var(--ink); color:#fff;}
+
+  /* ===== Timeline ===== */
+  .timeline{display:flex; overflow-x:auto; gap:0; margin-top:48px; padding-bottom:14px;}
+  .tl-item{
+    min-width:200px; flex:1; border-left:2px solid var(--line); padding:0 22px 22px 22px; position:relative;
+  }
+  .tl-item:first-child{border-left:2px solid var(--denim);}
+  .tl-year{font-family:var(--r-mono); font-size:28px; font-weight:600; color:var(--denim); margin-bottom:8px;}
+  .tl-item:first-child .tl-year, .tl-item.now .tl-year{color:var(--thread);}
+  .tl-dot{position:absolute; left:-6px; top:6px; width:10px; height:10px; border-radius:50%; background:var(--line);}
+  .tl-item:first-child .tl-dot, .tl-item.now .tl-dot{background:var(--thread);}
+  .tl-text{font-size:14px; color:var(--ink-soft);}
+  .tl-item.now{background:var(--surface);}
+  .tl-tag{
+    font-family:var(--r-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--thread); margin-top:8px; display:inline-block;
+  }
+  .note{
+    margin-top:28px; font-family:var(--r-mono); font-size:13px; color:var(--ink-soft);
+    border-left:2px solid var(--tape); padding-left:16px; max-width:760px;
+  }
+
+  /* ===== Lean tool cards ===== */
+  .swatches{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; margin-top:40px;}
+  .swatch{
+    background:var(--surface); border:1px solid var(--line); padding:24px; position:relative;
+    transition:transform .25s, box-shadow .25s;
+  }
+  .swatch:hover{transform:translateY(-4px); box-shadow:0 12px 24px -16px rgba(33,36,43,0.4);}
+  .swatch .tag-num{
+    font-family:var(--r-mono); font-size:11px; color:#fff; background:var(--denim);
+    display:inline-block; padding:3px 8px; margin-bottom:14px; letter-spacing:0.1em;
+  }
+  .swatch p{font-size:14px;}
+  .swatch .applied{
+    margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);
+    font-size:13px; color:var(--ink);
+  }
+  .swatch .applied b{color:var(--thread); font-family:var(--r-mono); font-size:11px; letter-spacing:0.1em; display:block; margin-bottom:6px;}
+
+  /* ===== Scorecard ===== */
+  .scorecard{margin-top:40px; border:1px solid var(--line); background:var(--surface);}
+  .score-row{
+    display:grid; grid-template-columns: 36px 1fr 220px; gap:18px; align-items:center;
+    padding:18px 22px; border-bottom:1px solid var(--line);
+  }
+  .score-row:last-child{border-bottom:none;}
+  .score-row .idx{font-family:var(--r-mono); color:var(--ink-soft); font-size:13px;}
+  .score-row .label{font-weight:600; font-size:15px;}
+  .score-row .sub{font-size:13px; color:var(--ink-soft); margin-top:2px;}
+  .bar-track{height:8px; background:var(--paper); border:1px solid var(--line); position:relative; overflow:hidden;}
+  .bar-fill{height:100%; background:var(--denim); width:0%; transition:width 1.2s ease;}
+  .score-num{font-family:var(--r-mono); font-size:12px; color:var(--ink-soft); margin-top:6px; text-align:right;}
+  .score-total{
+    padding:22px; font-family:var(--r-mono); font-size:14px; background:var(--ink); color:#fff;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+  }
+  .score-total b{font-size:22px; color:var(--tape);}
+  @media (max-width:700px){.score-row{grid-template-columns:24px 1fr; } .score-row > div:last-child{grid-column:1 / -1;}}
+
+  /* ===== VSM flow ===== */
+  .vsm{display:flex; overflow-x:auto; gap:0; margin-top:40px; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .vsm-step{
+    min-width:170px; flex:1; padding:20px 16px; border-right:1px solid var(--line);
+  }
+  .vsm-step:last-child{border-right:none;}
+  .vsm-step h4{font-family:var(--r-mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px; color:var(--denim);}
+  .vsm-step p{font-size:13px; color:var(--ink-soft);}
+  .flag{font-family:var(--r-mono); font-size:18px; font-weight:600; margin-bottom:8px; display:block;}
+  .flag.ok{color:#3E7A4D;}
+  .flag.miss{color:var(--thread);}
+
+  /* ===== 5 whys ladder ===== */
+  .whys{margin-top:40px; max-width:760px;}
+  .why-step{
+    display:flex; gap:18px; padding:18px 0; border-bottom:1px solid var(--line);
+  }
+  .why-step:last-child{border-bottom:none; background:var(--surface); margin-left:-22px; margin-right:-22px; padding-left:22px; padding-right:22px; border:1px solid var(--tape); margin-top:6px;}
+  .why-num{
+    font-family:var(--r-mono); font-size:13px; color:#fff; background:var(--denim);
+    width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .why-step:last-child .why-num{background:var(--thread);}
+  .why-text b{display:block; font-family:var(--r-mono); font-size:11px; letter-spacing:0.1em; color:var(--denim-soft); margin-bottom:4px;}
+  .why-step:last-child .why-text b{color:var(--thread);}
+  .why-text p{font-size:14px; margin:0; max-width:none;}
+
+  /* ===== Roadmap ===== */
+  .roadmap{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; margin-top:40px;}
+  .road-card{background:var(--surface); border:1px solid var(--line); padding:22px;}
+  .road-card .period{font-family:var(--r-mono); font-size:12px; letter-spacing:0.1em; color:var(--thread); margin-bottom:10px;}
+  .road-card ul{padding-left:0; list-style:none; font-size:14px; color:var(--ink);}
+  .road-card li{padding:8px 0; border-bottom:1px dashed var(--line); display:flex; gap:10px;}
+  .road-card li:last-child{border-bottom:none;}
+  .road-card li::before{content:"›"; color:var(--denim); font-weight:700;}
+  .road-card .tool{font-family:var(--r-mono); font-size:11px; color:var(--ink-soft); display:block; margin-top:4px;}
+
+  /* ===== Kanban ===== */
+  .kanban{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:30px;}
+  .kanban-col{background:var(--surface); border:1px solid var(--line); min-height:160px;}
+  .kanban-col h4{
+    font-family:var(--r-mono); font-size:12px; letter-spacing:0.1em; padding:14px 16px;
+    border-bottom:1px solid var(--line); background:var(--ink); color:#fff;
+  }
+  .kanban-col .card{
+    margin:12px; padding:12px; background:var(--paper); border:1px solid var(--line); font-size:13px;
+  }
+  @media (max-width:700px){.kanban{grid-template-columns:1fr;}}
+
+  /* ===== Recommendations ===== */
+  .rec-list{margin-top:36px; max-width:760px;}
+  .rec-list li{list-style:none; display:flex; gap:16px; padding:16px 0; border-bottom:1px solid var(--line);}
+  .rec-list li:last-child{border-bottom:none;}
+  .rec-num{font-family:var(--r-mono); color:var(--tape); -webkit-text-stroke:1px var(--ink); font-size:24px; font-weight:700; flex-shrink:0; width:36px;}
+  .rec-list p{font-size:14px; color:var(--ink); margin:0;}
+
+  /* ===== Footer ===== */
+  footer{
+    background:var(--ink); color:#D8D5CC; padding:60px 0 30px; margin-top:40px;
+  }
+  footer h3{color:#fff;}
+  footer a{color:var(--tape);}
+  .ref-list{font-size:13px; color:#9CA0AC; margin-top:18px; columns:2; column-gap:40px;}
+  .ref-list li{margin-bottom:10px; list-style:none;}
+  @media (max-width:700px){.ref-list{columns:1;}}
+  .foot-bottom{
+    margin-top:40px; padding-top:24px; border-top:1px solid #383B45;
+    font-family:var(--r-mono); font-size:12px; color:#777B87; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+
+  /* ===== Last updated badge ===== */
+  .updated-badge{
+    font-family:var(--r-mono); font-size:11px; color:var(--ink-soft);
+    display:flex; align-items:center; gap:6px;
+  }
+  .updated-badge .dot{width:7px; height:7px; border-radius:50%; background:#3E7A4D; box-shadow:0 0 0 0 rgba(62,122,77,0.6); animation:pulse 2s infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(62,122,77,0.5);}
+    70%{box-shadow:0 0 0 6px rgba(62,122,77,0);}
+    100%{box-shadow:0 0 0 0 rgba(62,122,77,0);}
+  }
+  @media (max-width:700px){.updated-badge{display:none;}}
+
+  /* ===== Stitch divider ===== */
+  .stitch{
+    width:100%; height:24px; overflow:hidden;
+  }
+  .stitch svg{width:100%; height:24px; display:block;}
+  .stitch path{
+    stroke:var(--line); stroke-width:2; fill:none; stroke-dasharray:10 8;
+    stroke-dashoffset:1000;
+  }
+  .stitch.show path{
+    animation:stitchDraw 1.6s ease forwards;
+  }
+  @keyframes stitchDraw{ to{ stroke-dashoffset:0; } }
+
+  /* ===== Stats / counters ===== */
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:0; margin-top:48px; border:1px solid var(--line);}
+  .stat{padding:28px 24px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--surface);}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:var(--r-display); font-size:clamp(28px,4vw,40px); font-weight:700; color:var(--denim); line-height:1;}
+  .stat .num .suffix{color:var(--thread);}
+  .stat .label{font-family:var(--r-mono); font-size:12px; color:var(--ink-soft); margin-top:8px; letter-spacing:0.04em;}
+  @media (max-width:700px){.stat{border-right:none;}}
+
+  /* ===== Parallax hero bg ===== */
+  .hero{overflow:hidden;}
+  .hero-bg{
+    position:absolute; top:0; left:0; right:0; height:520px; z-index:-1;
+    background:
+      radial-gradient(circle at 85% 10%, rgba(231,178,62,0.18), transparent 45%),
+      radial-gradient(circle at 10% 30%, rgba(46,67,116,0.10), transparent 40%);
+    will-change:transform;
+  }
+
+  /* ===== Reveal animation ===== */
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.show{opacity:1; transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1; transform:none; transition:none;}
+    html{scroll-behavior:auto;}
+    .bar-fill{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">LEAN<span>×</span>DPP</div>
+    <div class="navlinks">
+      <a href="#timeline">Why Now</a>
+      <a href="#toolkit">Toolkit</a>
+      <a href="#scorecard">Scorecard</a>
+      <a href="#case">Case Study</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#refs">References</a>
+    </div>
+    <div class="updated-badge"><span class="dot"></span> Regulatory check: <span id="last-updated">10 June 2026</span></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero wrap">
+  <div class="hero-bg" id="hero-bg"></div>
+  <div class="tagline">Lean Management Practical Project — SEU, 3rd Year</div>
+  <h1>A Lean toolkit for <em>Digital Product Passport</em> readiness in Bangladesh's RMG factories.</h1>
+  <p class="lede">The EU's Digital Product Passport is coming for textiles around 2027–2028. Most SME garment factories already hold the data it needs — scattered across cutting tickets, supplier PDFs, and Excel sheets. This framework uses 5S, VSM, 5 Whys, Kaizen, and Kanban to find it, link it, and keep it.</p>
+
+  <div class="meta-row">
+    <div class="meta-card">REGULATION<b>EU ESPR / DPP</b></div>
+    <div class="meta-card">SECTOR<b>Bangladesh RMG — SME</b></div>
+    <div class="meta-card">METHOD<b>5 Lean Tools</b></div>
+    <div class="meta-card">STATUS<b>Desk-based Framework</b></div>
+  </div>
+
+  <div class="cta-row">
+    <a class="btn btn-primary" href="Lean_DPP_Readiness_Framework.pdf" target="_blank">↓ Download Full PDF</a>
+    <a class="btn btn-secondary" href="#scorecard">View the Scorecard</a>
+  </div>
+
+  <div class="stats reveal">
+    <div class="stat"><div class="num" data-count="4000">0</div><div class="label">BGMEA member factories</div></div>
+    <div class="stat"><div class="num" data-count="4" data-suffix="M">0</div><div class="label">RMG sector workers</div></div>
+    <div class="stat"><div class="num" data-count="40" data-prefix="$" data-suffix="B">0</div><div class="label">Annual export earnings</div></div>
+    <div class="stat"><div class="num" data-count="2027">0</div><div class="label">Expected EU textile DPP delegated act</div></div>
+  </div>
+</header>
+
+<div class="stitch wrap" id="stitch-1"><svg viewBox="0 0 1080 24" preserveAspectRatio="none"><path d="M0,12 L1080,12"/></svg></div>
+
+
+<!-- WHY NOW / TIMELINE -->
+<section id="timeline">
+  <div class="section-tab">01 — CONTEXT</div>
+  <div class="wrap">
+    <div class="eyebrow">Why now</div>
+    <h2 class="reveal">The DPP clock has already started</h2>
+    <p class="lede reveal">Based on currently published EU sources, here is the indicative timeline for textiles. Dates have slipped before — but the direction is firm.</p>
+
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2024</div>
+        <div class="tl-text">ESPR enters into force (18 July 2024) — the legal framework behind the DPP.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2025</div>
+        <div class="tl-text">Ecodesign Working Plan 2025–2030 confirms textiles as a priority category.</div>
+      </div>
+      <div class="tl-item now">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2026</div>
+        <div class="tl-text">EU Central DPP Registry expected live (19 July). Unsold-goods destruction ban begins for large firms.</div>
+        <span class="tl-tag">● we are here</span>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2027</div>
+        <div class="tl-text">Textile-specific delegated act expected, starting an ~18-month transition window.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">2028</div>
+        <div class="tl-text">Mandatory DPP compliance widely expected to begin — SMEs typically get longer deadlines.</div>
+      </div>
+    </div>
+
+    <div class="note reveal">Honesty note: as of mid-2026 the textile delegated act has not yet been published. This framework treats "readiness" as forward-looking preparation — better data and documentation habits — not a claim that a legal deadline is imminent today.</div>
+  </div>
+</section>
+
+<!-- TOOLKIT -->
+<div class="stitch wrap"><svg viewBox="0 0 1080 24" preserveAspectRatio="none"><path d="M0,12 L1080,12"/></svg></div>
+<section id="toolkit">
+  <div class="section-tab">02 — TOOLKIT</div>
+  <div class="wrap">
+    <div class="eyebrow">Methodology</div>
+    <h2 class="reveal">Five Lean tools, retasked for data</h2>
+    <p class="lede reveal">Each tool keeps its original Lean job — but the "workplace" being organised is the factory's data and documentation, not just its floor.</p>
+
+    <div class="swatches">
+      <div class="swatch reveal">
+        <span class="tag-num">TOOL 01</span>
+        <h3>5S</h3>
+        <p>Sort, Set in order, Shine, Standardise, Sustain — the classic workplace organisation method.</p>
+        <div class="applied"><b>Applied to DPP</b>Sort which material/supplier records exist, standardise naming &amp; formats, sustain update habits — the foundation of any DPP data feed.</div>
+      </div>
+      <div class="swatch reveal">
+        <span class="tag-num">TOOL 02</span>
+        <h3>Value Stream Mapping</h3>
+        <p>Maps material and information flow end-to-end to expose waste.</p>
+        <div class="applied"><b>Applied to DPP</b>Maps the information flow for one product line — fabric to export — flagging exactly where origin and composition data is captured or lost.</div>
+      </div>
+      <div class="swatch reveal">
+        <span class="tag-num">TOOL 03</span>
+        <h3>5 Whys</h3>
+        <p>Root-cause analysis by repeatedly asking "why" a problem occurs.</p>
+        <div class="applied"><b>Applied to DPP</b>Drills into each scorecard gap — e.g. "fabric composition isn't recorded per batch" — until the real, fixable root cause appears.</div>
+      </div>
+      <div class="swatch reveal">
+        <span class="tag-num">TOOL 04</span>
+        <h3>Kaizen</h3>
+        <p>Continuous, incremental improvement involving everyone.</p>
+        <div class="applied"><b>Applied to DPP</b>Turns scorecard gaps into a 30/60/90-day roadmap of small, low-cost steps — templates and checklists, not new software.</div>
+      </div>
+      <div class="swatch reveal">
+        <span class="tag-num">TOOL 05</span>
+        <h3>Kanban</h3>
+        <p>Visual pull-system for managing work in progress.</p>
+        <div class="applied"><b>Applied to DPP</b>A simple To Do / In Progress / Done board tracks the roadmap's documentation tasks across departments.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCORECARD -->
+<div class="stitch wrap"><svg viewBox="0 0 1080 24" preserveAspectRatio="none"><path d="M0,12 L1080,12"/></svg></div>
+<section id="scorecard">
+  <div class="section-tab">03 — SCORECARD</div>
+  <div class="wrap">
+    <div class="eyebrow">Original diagnostic</div>
+    <h2 class="reveal">DPP Readiness Scorecard</h2>
+    <p class="lede reveal">Six factory-level dimensions, scored 1 (not ready) to 5 (fully ready). Built for this project from publicly described DPP data categories — not an official EU or BGMEA checklist.</p>
+
+    <div class="scorecard reveal" id="scorecard-table">
+      <!-- rows injected with data-score for animation -->
+      <div class="score-row" data-score="2">
+        <div class="idx">01</div>
+        <div><div class="label">Traceability &amp; Origin Data</div><div class="sub">Can a finished garment be traced back to fabric lot, dye lot, and supplier?</div></div>
+        <div><div class="bar-track"><div class="bar-fill"></div></div><div class="score-num">2 / 5</div></div>
+      </div>
+      <div class="score-row" data-score="2">
+        <div class="idx">02</div>
+        <div><div class="label">Material Composition Data</div><div class="sub">Is fibre composition recorded per fabric roll / order, not just on the care label?</div></div>
+        <div><div class="bar-track"><div class="bar-fill"></div></div><div class="score-num">2 / 5</div></div>
+      </div>
+      <div class="score-row" data-score="3">
+        <div class="idx">03</div>
+        <div><div class="label">Supplier Data Management</div><div class="sub">Are supplier details and certifications (OCS, GRS, GOTS) centrally stored?</div></div>
+        <div><div class="bar-track"><div class="bar-fill"></div></div><div class="score-num">3 / 5</div></div>
+      </div>
+      <div class="score-row" data-score="3">
+        <div class="idx">04</div>
+        <div><div class="label">Chemical &amp; Compliance Docs</div><div class="sub">Are chemical inputs and certificates (REACH, OEKO-TEX) logged with expiry tracking?</div></div>
+        <div><div class="bar-track"><div class="bar-fill"></div></div><div class="score-num">3 / 5</div></div>
+      </div>
+      <div class="score-row" data-score="2">
+        <div class="idx">05</div>
+        <div><div class="label">Digital Infrastructure</div><div class="sub">Is there any digital system across departments, or is it fully paper-based?</div></div>
+        <div><div class="bar-track"><div class="bar-fill"></div></div><div class="score-num">2 / 5</div></div>
+      </div>
+      <div class="score-row" data-score="2">
+        <div class="idx">06</div>
+        <div><div class="label">Documentation Culture</div><div class="sub">Do floor supervisors &amp; merchandisers understand why data accuracy matters?</div></div>
+        <div><div class="bar-track"><div class="bar-fill"></div></div><div class="score-num">2 / 5</div></div>
+      </div>
+      <div class="score-total">
+        <span>Hypothetical case score — "Green Stitch Apparels Ltd."</span>
+        <span><b>14</b> / 30 — Developing</span>
+      </div>
+    </div>
+    <p class="reveal" style="margin-top:18px; font-size:13px;">Bands: 6–12 Early stage · 13–21 Developing · 22–30 Approaching readiness.</p>
+  </div>
+</section>
+
+<!-- CASE STUDY -->
+<div class="stitch wrap"><svg viewBox="0 0 1080 24" preserveAspectRatio="none"><path d="M0,12 L1080,12"/></svg></div>
+<section id="case">
+  <div class="section-tab">04 — CASE STUDY</div>
+  <div class="wrap">
+    <div class="eyebrow">Illustrative · hypothetical</div>
+    <h2 class="reveal">"Green Stitch Apparels Ltd." — where does the data disappear?</h2>
+    <p class="lede reveal">A fictional ~450-worker knitwear SME near Gazipur, built to be representative of typical BGMEA SME members. Tracing one order across the floor shows fabric-level data exists at the start — and vanishes before packing.</p>
+
+    <div class="vsm reveal">
+      <div class="vsm-step">
+        <h4>Fabric Supplier</h4>
+        <span class="flag ok">✓ exists</span>
+        <p>Composition + GRS certificate sent as a PDF — but not linked digitally to the order.</p>
+      </div>
+      <div class="vsm-step">
+        <h4>Receiving / Inspection</h4>
+        <span class="flag miss">✗ missing</span>
+        <p>Fabric inspection report logged on paper only — not digitised.</p>
+      </div>
+      <div class="vsm-step">
+        <h4>Cutting</h4>
+        <span class="flag ok">~ partial</span>
+        <p>Cutting ticket references the fabric roll number.</p>
+      </div>
+      <div class="vsm-step">
+        <h4>Sewing</h4>
+        <span class="flag miss">✗ missing</span>
+        <p>No material data carried over — line tracks output quantity only.</p>
+      </div>
+      <div class="vsm-step">
+        <h4>Finishing &amp; QC</h4>
+        <span class="flag miss">✗ missing</span>
+        <p>QC checks quality, not composition or origin.</p>
+      </div>
+      <div class="vsm-step">
+        <h4>Packing &amp; Export</h4>
+        <span class="flag ok">~ order-level</span>
+        <p>Packing list + invoice exist, but only at order level.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:56px;" class="reveal">5 Whys — chasing the root cause</h3>
+    <div class="whys reveal">
+      <div class="why-step"><div class="why-num">1</div><div class="why-text"><b>Why?</b><p>The cutting ticket records the fabric roll number, but it isn't carried onto sewing or packing documents.</p></div></div>
+      <div class="why-step"><div class="why-num">2</div><div class="why-text"><b>Why?</b><p>Sewing and finishing documents were designed only to track output quantity, not material origin.</p></div></div>
+      <div class="why-step"><div class="why-num">3</div><div class="why-text"><b>Why?</b><p>They were designed years ago for productivity tracking — before traceability was a buyer requirement.</p></div></div>
+      <div class="why-step"><div class="why-num">4</div><div class="why-text"><b>Why?</b><p>No department owns cross-stage data continuity — each one optimises its own paperwork in isolation.</p></div></div>
+      <div class="why-step"><div class="why-num">5</div><div class="why-text"><b>Root cause</b><p>There's no standardised "order data card" that travels with the order through every stage — a 5S "standardise" gap at the document level.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<div class="stitch wrap"><svg viewBox="0 0 1080 24" preserveAspectRatio="none"><path d="M0,12 L1080,12"/></svg></div>
+<section id="roadmap">
+  <div class="section-tab">05 — ROADMAP</div>
+  <div class="wrap">
+    <div class="eyebrow">Kaizen plan</div>
+    <h2 class="reveal">30 / 60 / 90 — low-cost, no new software</h2>
+    <p class="lede reveal">The root cause above doesn't need an ERP system. It needs one standardised document that travels with the order.</p>
+
+    <div class="roadmap">
+      <div class="road-card reveal">
+        <div class="period">DAYS 1 – 30</div>
+        <ul>
+          <li>Pilot a one-page "Order Traceability Card" — fabric roll #, composition %, supplier, certificate ref — that travels with each cutting batch.<span class="tool">5S (standardise) + Kaizen</span></li>
+          <li>Create one shared folder for supplier certificates (OCS / GRS / OEKO-TEX), named by supplier + expiry date.<span class="tool">5S (sort &amp; set in order)</span></li>
+        </ul>
+      </div>
+      <div class="road-card reveal">
+        <div class="period">DAYS 31 – 60</div>
+        <ul>
+          <li>Train sewing &amp; finishing supervisors to record the Traceability Card # on existing production sheets.<span class="tool">Kaizen — staff training</span></li>
+          <li>Re-run the Readiness Scorecard for a follow-up score vs. baseline.<span class="tool">PDCA cycle</span></li>
+        </ul>
+      </div>
+      <div class="road-card reveal">
+        <div class="period">DAYS 61 – 90</div>
+        <ul>
+          <li>Pilot a shared spreadsheet linking Order # → Fabric Roll # → Composition → Certificate ref → Shipment #.<span class="tool">Digital 5S + Kanban</span></li>
+          <li>Review results with management; decide on extending to a second product line ahead of the 2027 delegated act.<span class="tool">Kaizen review</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:56px;" class="reveal">Implementation Kanban</h3>
+    <div class="kanban reveal">
+      <div class="kanban-col">
+        <h4>TO DO</h4>
+        <div class="card">Pilot shared spreadsheet (Days 61–90)</div>
+        <div class="card">Extend to 2nd product line</div>
+      </div>
+      <div class="kanban-col">
+        <h4>IN PROGRESS</h4>
+        <div class="card">Design Order Traceability Card</div>
+        <div class="card">Train sewing &amp; finishing supervisors</div>
+      </div>
+      <div class="kanban-col">
+        <h4>DONE</h4>
+        <div class="card">Create shared certificate folder structure</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECOMMENDATIONS -->
+<section id="recs">
+  <div class="section-tab">06 — TAKEAWAYS</div>
+  <div class="wrap">
+    <div class="eyebrow">Conclusion</div>
+    <h2 class="reveal">Start with documentation, not software</h2>
+    <ul class="rec-list reveal">
+      <li><span class="rec-num">01</span><p>The biggest readiness gains for SMEs come from standardising existing paper/Excel records — not buying ERP platforms.</p></li>
+      <li><span class="rec-num">02</span><p>Treat DPP readiness as a Kaizen journey: small, continuous improvements compound over the ~18–24 months before mandatory compliance is expected.</p></li>
+      <li><span class="rec-num">03</span><p>Engage buying houses early — many EU brands request transparency data ahead of legal deadlines.</p></li>
+      <li><span class="rec-num">04</span><p>BGMEA, BUFT and NITER are likely future channels for Bangladesh-specific DPP guidance.</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="refs">
+  <div class="wrap">
+    <h3>References &amp; sources</h3>
+    <p style="color:#9CA0AC; font-size:13px; max-width:680px;">All sources accessed June 2026. EU DPP timelines are subject to change pending final delegated acts. Full citations and the complete framework are in the downloadable PDF.</p>
+    <ul class="ref-list">
+      <li>Worldfavor — EU Digital Product Passport: textile industry impact</li>
+      <li>Segura — The EU Digital Product Passport: All you need to know</li>
+      <li>TracexTech — EU Textile Strategy DPP Guide (2026–2027)</li>
+      <li>TracexTech — DPP Product Scope: ESPR Timelines</li>
+      <li>Carbonfact — DPP for Textiles: What Fashion Brands Need to Know</li>
+      <li>Retraced — Preparing Your Fashion Brand for the DPP</li>
+      <li>PassportCraft — DPP Timeline 2026–2030</li>
+      <li>Trimco Group — What You Need to Know About the DPP</li>
+      <li>New Age BD — BGMEA enrolls 128 new RMG factories (2025)</li>
+      <li>Prothom Alo — 128 new garment factories in 15 months (2025)</li>
+      <li>Sidley Austin / Trade for Development Initiative — BGMEA</li>
+      <li>Wikipedia — BGMEA; 2025 Dhaka garment factory fire</li>
+      <li>BGMEA — Bangladesh garment sector progress report</li>
+      <li>The Daily Star — 24 garment factories get green certificates (2025)</li>
+      <li>Daily Industry BD — Bangladesh sets record with 243 green RMG factories</li>
+    </ul>
+    <div class="foot-bottom">
+      <span>Lean-Based DPP Readiness Assessment Framework — SEU, June 2026</span>
+      <a href="Lean_DPP_Readiness_Framework.pdf" target="_blank">Download full PDF →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Animate score bars when scorecard enters view
+  const scoreTable = document.getElementById('scorecard-table');
+  const barIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        document.querySelectorAll('.score-row').forEach(row => {
+          const score = row.getAttribute('data-score');
+          if(score){
+            const fill = row.querySelector('.bar-fill');
+            fill.style.width = (score/5*100) + '%';
+          }
+        });
+        barIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  if(scoreTable) barIO.observe(scoreTable);
+
+  // Reveal stitch dividers on scroll
+  document.querySelectorAll('.stitch').forEach(el => {
+    const stitchIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('show'); stitchIO.unobserve(e.target); } });
+    }, { threshold: 0.4 });
+    stitchIO.observe(el);
+  });
+
+  // Animated stat counters
+  const stats = document.querySelectorAll('.stat .num');
+  const statIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        const el = e.target;
+        const target = parseInt(el.getAttribute('data-count'), 10);
+        const prefix = el.getAttribute('data-prefix') || '';
+        const suffix = el.getAttribute('data-suffix') || '';
+        const duration = 1400;
+        const start = performance.now();
+        function tick(now){
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const val = Math.floor(eased * target);
+          el.textContent = prefix + val.toLocaleString() + (suffix ? '' : '');
+          if(suffix){ el.innerHTML = prefix + val.toLocaleString() + '<span class="suffix">' + suffix + '</span>'; }
+          if(progress < 1){ requestAnimationFrame(tick); } else {
+            el.innerHTML = prefix + target.toLocaleString() + (suffix ? '<span class="suffix">'+suffix+'</span>' : '');
+          }
+        }
+        requestAnimationFrame(tick);
+        statIO.unobserve(el);
+      }
+    });
+  }, { threshold: 0.3 });
+  stats.forEach(s => statIO.observe(s));
+
+  // Subtle parallax on hero background
+  const heroBg = document.getElementById('hero-bg');
+  if(heroBg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      heroBg.style.transform = 'translateY(' + (y * 0.25) + 'px)';
+    }, { passive: true });
+  }
+
+  /*
+    HOW TO UPDATE THE "Regulatory check" DATE:
+    1. On GitHub, open this repo and click index.html
+    2. Click the pencil (Edit) icon, top right
+    3. Find: <span id="last-updated">10 June 2026</span>
+    4. Change the date to today's date
+    5. Scroll down, click "Commit changes"
+    The live site updates automatically within ~1 minute.
+  */
+</script>
+
+</body>
+</html>
